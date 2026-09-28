@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Business Assistant</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #1f2937;
+}
+
+.container {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+h1 {
+    margin-top: 0;
+    font-size: 32px;
+}
+
+.subtitle {
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+.section {
+    margin-top: 30px;
+}
+
+.section h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-top: 15px;
+    margin-bottom: 6px;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+button {
+    margin-top: 30px;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: #3276EA;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.success {
+    display: none;
+    margin-top: 20px;
+    padding: 15px;
+    background: #ecfdf5;
+    color: #065f46;
+    border-radius: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>AI Business Assistant</h1>
+
+<p class="subtitle">
+Tell us about your business. This information will be used to configure your AI website assistant.
+</p>
+
+<form id="businessForm">
+
+<div class="section">
+<h2>Business Information</h2>
+
+<label>Business Name</label>
+<input type="text" id="businessName" required>
+
+<label>Business Type</label>
+<input type="text" id="businessType">
+
+<label>Business Description</label>
+<textarea id="description"></textarea>
+
+</div>
+
+<div class="section">
+<h2>Location</h2>
+
+<label>Address</label>
+<input type="text" id="address">
+
+<label>City</label>
+<input type="text" id="city">
+
+<label>Country</label>
+<input type="text" id="country">
+
+</div>
+
+<div class="section">
+<h2>Opening Hours</h2>
+
+<label>Opening Hours</label>
+
+<textarea
+id="hours"
+placeholder="Monday-Friday: 9:00 AM - 6:00 PM&#10;Saturday: 10:00 AM - 4:00 PM&#10;Sunday: Closed">
+</textarea>
+
+</div>
+
+<div class="section">
+<h2>Services / Products</h2>
+
+<label>Services and Products</label>
+
+<textarea
+id="services"
+placeholder="Basic Service - $50&#10;Premium Service - $90&#10;Consultation - $30">
+</textarea>
+
+</div>
+
+<div class="section">
+<h2>Booking / Appointments</h2>
+
+<label>Booking Information</label>
+
+<textarea
+id="booking"
+placeholder="Appointments available. Customers can request an appointment through the website.">
+</textarea>
+
+</div>
+
+<div class="section">
+<h2>Payment Methods</h2>
+
+<label>Accepted Payment Methods</label>
+<input type="text" id="payments">
+
+</div>
+
+<div class="section">
+<h2>Policies</h2>
+
+<label>Business Policies</label>
+<textarea id="policies"></textarea>
+
+</div>
+
+<div class="section">
+<h2>Contact Information</h2>
+
+<label>Phone</label>
+<input type="text" id="phone">
+
+<label>Email</label>
+<input type="email" id="email">
+
+<label>Website</label>
+<input type="url" id="website">
+
+<label>Social Media</label>
+<input type="text" id="social">
+
+</div>
+
+<div class="section">
+<h2>Frequently Asked Questions</h2>
+
+<label>FAQs</label>
+
+<textarea
+id="faqs"
+placeholder="Question: What are your opening hours?&#10;Answer: Monday-Friday 9 AM - 6 PM">
+</textarea>
+
+</div>
+
+<button type="submit">
+Create My AI Assistant
+</button>
+
+<div class="success" id="success">
+Your business information has been submitted successfully.
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("businessForm").addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const businessData = {
+
+        businessName: document.getElementById("businessName").value,
+
+        businessType: document.getElementById("businessType").value,
+
+        description: document.getElementById("description").value,
+
+        address: document.getElementById("address").value,
+
+        city: document.getElementById("city").value,
+
+        country: document.getElementById("country").value,
+
+        hours: document.getElementById("hours").value,
+
+        services: document.getElementById("services").value,
+
+        booking: document.getElementById("booking").value,
+
+        payments: document.getElementById("payments").value,
+
+        policies: document.getElementById("policies").value,
+
+        phone: document.getElementById("phone").value,
+
+        email: document.getElementById("email").value,
+
+        website: document.getElementById("website").value,
+
+        social: document.getElementById("social").value,
+
+        faqs: document.getElementById("faqs").value
+
+    };
+
+    try {
+
+        const response = await fetch("/api/business", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(businessData)
+
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+
+            document.getElementById("success").style.display = "block";
+
+        } else {
+
+            alert("Something went wrong.");
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Could not connect to the server.");
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
