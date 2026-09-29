@@ -98,8 +98,11 @@ app.get("/api/business", (req, res) => {
 
     try {
         const data = fs.readFileSync(DATA_FILE, "utf8");
+
         res.json(JSON.parse(data));
     } catch (error) {
+        console.error(error);
+
         res.status(500).json({
             success: false,
             message: "Could not read business information."
@@ -108,12 +111,60 @@ app.get("/api/business", (req, res) => {
 });
 
 app.get("/api/knowledge", (req, res) => {
-    if (!fs.existsSync(KNOWLEDGE_FILE)) {
-        return res.status(404).send("Knowledge base not found.");
+    if (!fs.existsSync(DATA_FILE)) {
+        return res.status(404).json({
+            success: false,
+            message: "Business data not found."
+        });
     }
 
-    res.type("text/plain");
-    res.send(fs.readFileSync(KNOWLEDGE_FILE, "utf8"));
+    try {
+        const business = JSON.parse(
+            fs.readFileSync(DATA_FILE, "utf8")
+        );
+
+        res.json({
+            success: true,
+
+            businessName: business.businessName || "Not provided",
+            businessType: business.businessType || "Not provided",
+
+            description: business.description || "Not provided",
+
+            address: business.address || "Not provided",
+            city: business.city || "Not provided",
+            country: business.country || "Not provided",
+
+            hours: business.hours || "Not provided",
+
+            services: business.services || "Not provided",
+
+            booking: business.booking || "Not provided",
+
+            payments: business.payments || "Not provided",
+
+            policies: business.policies || "Not provided",
+
+            phone: business.phone || "Not provided",
+            email: business.email || "Not provided",
+            website: business.website || "Not provided",
+            social: business.social || "Not provided",
+
+            faqs: business.faqs || "Not provided",
+
+            knowledge: fs.existsSync(KNOWLEDGE_FILE)
+                ? fs.readFileSync(KNOWLEDGE_FILE, "utf8")
+                : "Knowledge base not found."
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Could not read business knowledge."
+        });
+    }
 });
 
 app.listen(PORT, () => {
